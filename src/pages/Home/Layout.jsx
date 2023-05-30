@@ -1,30 +1,38 @@
 /* eslint-disable react/jsx-key */
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import category from "../../services/category";
 import Product from "../../services/product";
 
 const Layout = () => {
   const [data, setdata] = useState();
-  const [prod, setproduct] = useState();
+  const [isLoading, setLoading] = useState(true);
+  const [prod, setproduct] = useState([]);
+  const [newArrived, setNew] = useState([]);
   const getCat = () => {
     category
       .getAll()
       .then((res) => {
         setdata(res.data.data);
+        setLoading(false);
       })
       .catch((err) => console.log(err));
 
-    Product
-    .getAll()
+    Product.getAll()
       .then((res) => {
         setproduct(res.data.data);
+        setLoading(false);
       })
       .catch((err) => console.log(err));
   };
+  const newArr = prod?.slice(prod.length - 8, prod.length + 1);
+
   useEffect(() => {
     getCat();
   }, []);
-
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   const calcul = (subcategory) => {
     console.log("sub", subcategory);
     var sum = 0;
@@ -111,6 +119,45 @@ const Layout = () => {
       </div>
       {/* Categories End */}
 
+      {/* Offer Start */}
+      <div className="container-fluid offer pt-5">
+        <div className="row px-xl-5">
+          <div className="col-md-6 pb-4">
+            <div className="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5">
+              <img src="img/offer-1.png" alt />
+              <div className="position-relative" style={{ zIndex: 1 }}>
+                <h5 className="text-uppercase text-primary mb-3">
+                  20% off the all order
+                </h5>
+                <h1 className="mb-4 font-weight-semi-bold">
+                  Spring Collection
+                </h1>
+                <a href className="btn btn-outline-primary py-md-2 px-md-3">
+                  Shop Now
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6 pb-4">
+            <div className="position-relative bg-secondary text-center text-md-left text-white mb-2 py-5 px-5">
+              <img src="img/offer-2.png" alt />
+              <div className="position-relative" style={{ zIndex: 1 }}>
+                <h5 className="text-uppercase text-primary mb-3">
+                  20% off the all order
+                </h5>
+                <h1 className="mb-4 font-weight-semi-bold">
+                  Winter Collection
+                </h1>
+                <a href className="btn btn-outline-primary py-md-2 px-md-3">
+                  Shop Now
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Offer End */}
+
       {/* Products Start */}
       <div className="container-fluid pt-5">
         <div className="text-center mb-4">
@@ -119,38 +166,42 @@ const Layout = () => {
           </h2>
         </div>
         <div className="row px-xl-5 pb-3">
-          {
-            <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
-              <div className="card product-item border-0 mb-4">
-                <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                  <img
-                    className="img-fluid w-100"
-                    src="img/product-1.jpg"
-                    alt
-                  />
-                </div>
-                <div className="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                  <h6 className="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                  <div className="d-flex justify-content-center">
-                    <h6>$123.00</h6>
-                    <h6 className="text-muted ml-2">
-                      <del>$123.00</del>
-                    </h6>
+          {newArr.map((item) => {
+            return (
+              <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div className="card product-item border-0 mb-4">
+                  <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                    <img
+                      className="img-fluid w-100"
+                      src={"http://localhost:8000/" + item.gallery[1].name}
+                      alt
+                    />
+                  </div>
+                  <div className="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                    <h6 className="text-truncate mb-3">{item.name}</h6>
+                    <div className="d-flex justify-content-center">
+                      <h6>${item.price}</h6>
+                      {/*<h6 className="text-muted ml-2">
+                    <del>$123.00</del>
+          </h6>*/}
+                    </div>
+                  </div>
+                  <div className="card-footer d-flex justify-content-between bg-light border">
+                    <Link to={`/detail/${item._id}`}>
+                      <a className="btn btn-sm text-dark p-0">
+                        <i className="fas fa-eye text-primary mr-1" />
+                        View Detail
+                      </a>
+                    </Link>
+                    <a href className="btn btn-sm text-dark p-0">
+                      <i className="fas fa-shopping-cart text-primary mr-1" />
+                      Add To Cart
+                    </a>
                   </div>
                 </div>
-                <div className="card-footer d-flex justify-content-between bg-light border">
-                  <a href className="btn btn-sm text-dark p-0">
-                    <i className="fas fa-eye text-primary mr-1" />
-                    View Detail
-                  </a>
-                  <a href className="btn btn-sm text-dark p-0">
-                    <i className="fas fa-shopping-cart text-primary mr-1" />
-                    Add To Cart
-                  </a>
-                </div>
               </div>
-            </div>
-          }
+            );
+          })}
         </div>
       </div>
       {/* Products End */}
