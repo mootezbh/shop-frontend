@@ -1,10 +1,13 @@
 /* eslint-disable react/jsx-key */
 import { useEffect } from "react";
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import auth from "../../services/auth";
 import category from "../../services/category";
-
+//TODO: profile pic
 const Sidebar = () => {
+  const user = JSON.parse(localStorage.getItem("userc"));
+  console.log("userc : ", user);
   const location = useLocation();
   console.log(location.pathname);
   const [data, setdata] = useState();
@@ -20,6 +23,16 @@ const Sidebar = () => {
     getCat();
   }, []);
   console.log(data);
+  const navigate = useNavigate();
+  const refresh_token = JSON.parse(localStorage.getItem("refresh_token"));
+  const handlelogout = () => {
+    auth
+      .logout(refresh_token)
+      .then((res) => console.log(res))
+      .catch((error) => console.log(error));
+    localStorage.clear();
+    navigate("/");
+  };
   return (
     <div
       className="container-fluid mb-5"
@@ -128,14 +141,30 @@ const Sidebar = () => {
                   </a>
                 </Link>
               </div>
-              <div className="navbar-nav ml-auto py-0">
-                <a href className="nav-item nav-link">
-                  Login
-                </a>
-                <a href className="nav-item nav-link">
-                  Register
-                </a>
-              </div>
+              {user == null ? (
+                <div className="navbar-nav ml-auto py-0">
+                  <Link to="/login">
+                    <a href className="nav-item nav-link">
+                      Login
+                    </a>
+                  </Link>
+                  <Link to="/signup">
+                    <a href className="nav-item nav-link">
+                      Register
+                    </a>
+                  </Link>
+                </div>
+              ) : (
+                <div className="navbar-nav ml-auto py-0">
+                  <a
+                    href="#"
+                    className="nav-item nav-link"
+                    onClick={handlelogout}
+                  >
+                    Logout
+                  </a>
+                </div>
+              )}
             </div>
           </nav>
           {location.pathname === "/" && (
@@ -148,7 +177,7 @@ const Sidebar = () => {
                 <div className="carousel-item active" style={{ height: 410 }}>
                   <img
                     className="img-fluid"
-                    src="img/carousel-1.jpg"
+                    src={`http://localhost:8000/pc.jpeg`}
                     alt="Image"
                   />
                   <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
@@ -157,7 +186,7 @@ const Sidebar = () => {
                         10% Off Your First Order
                       </h4>
                       <h3 className="display-4 text-white font-weight-semi-bold mb-4">
-                        Fashionable Dress
+                        Laptops
                       </h3>
                       <a href className="btn btn-light py-2 px-3">
                         Shop Now
@@ -168,7 +197,7 @@ const Sidebar = () => {
                 <div className="carousel-item" style={{ height: 410 }}>
                   <img
                     className="img-fluid"
-                    src="img/carousel-2.jpg"
+                    src="http://localhost:8000/watch.jpeg"
                     alt="Image"
                   />
                   <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">

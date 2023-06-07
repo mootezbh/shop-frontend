@@ -173,7 +173,7 @@ const Layout = () => {
                   <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
                     <img
                       className="img-fluid w-100"
-                      src={"http://localhost:8000/" + item.gallery[1].name}
+                      src={"http://localhost:8000/" + item.gallery[0].name}
                       alt
                     />
                   </div>
