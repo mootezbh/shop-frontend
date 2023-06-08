@@ -8,7 +8,6 @@ const Layout = () => {
   const [data, setdata] = useState();
   const [isLoading, setLoading] = useState(true);
   const [prod, setproduct] = useState([]);
-  const [newArrived, setNew] = useState([]);
   const getCat = () => {
     category
       .getAll()

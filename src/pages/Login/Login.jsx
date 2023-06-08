@@ -63,43 +63,64 @@ function Login() {
       });
   };
   return (
-    <div className="conainer">
-      <section id="content">
+    <main>
+      <div className="login-block">
+        <a href className="text-decoration-none">
+          <h1 className="m-0 display-5 font-weight-semi-bold">
+            <span className="text-primary font-weight-bold border px-3 mr-1">
+              E
+            </span>
+            Tech
+          </h1>
+        </a>
+        <br></br>
         <form onSubmit={handleSubmit}>
-          <h1>Login Form</h1>
-          <div className="fontuser">
-            <input
-              type="text"
-              placeholder="Username"
-              required
-              id="username"
-              name="email"
-              onChange={onChange}
-            />
-            <i className="fa fa-user fa-lg"></i>
+          <div className="form-group">
+            <div className="input-group">
+              <span className="input-group-addon">
+                <i className="fa fa-envelope ti-email" />
+              </span>
+              <input
+                type="text"
+                name="email"
+                className="form-control"
+                placeholder="Your email address"
+                required
+                onChange={onChange}
+              />
+            </div>
           </div>
-          <div className="fontuser">
-            <input
-              type="password"
-              placeholder="Password"
-              required
-              id="password"
-              name="password"
-              onChange={onChange}
-            />
-            <i className="fa fa-key fa-lg"></i>
+          <hr className="hr-xs" />
+          <div className="form-group">
+            <div className="input-group">
+              <span className="input-group-addon">
+                <i className="fa fa-lock ti-unlock" />
+              </span>
+              <input
+                type="password"
+                name="password"
+                className="form-control"
+                placeholder="Password"
+                required
+                onChange={onChange}
+              />
+            </div>
           </div>
-          <span style={{ color: "red" }}>{errorMessages}</span>
-          <div>
-            <button type="submit">Log in</button>
-            <Link to="/forgot">Lost your password?</Link>
-            <Link to="/signup">Register</Link>
-          </div>
+          <p style={{ color: "red" }}>{errorMessages}</p>
+          <button className="btn btn-primary btn-block btn1" type="submit">
+            Login
+          </button>
         </form>
-        {/* form */}
-      </section>
-      {/* content */}
-    </div>
+      </div>
+      <div className="login-links">
+        <p className="text-center">
+          Don't have an account?{" "}
+          <Link to="/signup">
+            <a className="txt-brand">Sign up</a>
+          </Link>
+        </p>
+      </div>
+    </main>
   );
 }
 
