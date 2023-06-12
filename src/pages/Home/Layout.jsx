@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import category from "../../services/category";
 import Product from "../../services/product";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/cartSlice";
 
 const Layout = () => {
+  const dispatch = useDispatch();
   const [data, setdata] = useState();
   const [isLoading, setLoading] = useState(true);
   const [prod, setproduct] = useState([]);
@@ -192,10 +195,13 @@ const Layout = () => {
                         View Detail
                       </a>
                     </Link>
-                    <a href className="btn btn-sm text-dark p-0">
+                    <button
+                      className="btn btn-sm text-dark p-0"
+                      onClick={dispatch(addToCart(item))}
+                    >
                       <i className="fas fa-shopping-cart text-primary mr-1" />
                       Add To Cart
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
