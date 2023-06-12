@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import customer from "../../services/customer";
 import "./style.css";
 const Profile = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState({});
   const [img, setImg] = useState(null);
   const [imgd, setImgd] = useState();
@@ -34,20 +37,16 @@ const Profile = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    let formData = new FormData();
-    formData.append("name", data.name);
-    if (data?.password) {
-      formData.append("password", data.password);
-    }
-    if (imgd) {
-      formData.append("picture", imgd);
-    }
-    console.log(formData.name);
+    setData({ ...data, picture: imgd?.name });
+    console.log(data);
     customer
-      .update(id, formData)
+      .update(id, data)
       .then((res) => {
         console.log(res);
         localStorage.setItem("userc", JSON.stringify(newusr));
+        Swal.fire("Update", "profile updated", "success");
+        navigate("/");
+
       })
       .catch((err) => console.log(err));
   };
@@ -92,8 +91,7 @@ const Profile = () => {
                   className="form-control"
                   type="text"
                   name="name"
-                  defaultValue={usr?.name}
-                  value={data?.name}
+                  placeholder={usr?.name}
                   onChange={onChange}
                 />
               </div>
