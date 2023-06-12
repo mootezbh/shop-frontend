@@ -1,80 +1,131 @@
 import { useState } from "react";
+import customer from "../../services/customer";
 import "./style.css";
 const Profile = () => {
+  const [data, setData] = useState({});
+  const [img, setImg] = useState(null);
+  const [imgd, setImgd] = useState();
+  console.log("imgd", imgd);
+  console.log("img", img);
   const usr = JSON.parse(localStorage.getItem("userc"));
+  const id = usr._id;
+  console.log("id", id);
   console.log(usr);
+  const onChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+    console.log(data);
+  };
+  const handleImg = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImg(URL.createObjectURL(e.target.files[0]));
+      setImgd(e.target.files[0]);
+    }
+  };
+
+  let newusr;
+  if (imgd) {
+    newusr = { ...usr, picture: imgd?.name, ...data };
+  } else {
+    newusr = { ...usr, ...data };
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    let formData = new FormData();
+    formData.append("name", data.name);
+    if (data?.password) {
+      formData.append("password", data.password);
+    }
+    if (imgd) {
+      formData.append("picture", imgd);
+    }
+    console.log(formData.name);
+    customer
+      .update(id, formData)
+      .then((res) => {
+        console.log(res);
+        localStorage.setItem("userc", JSON.stringify(newusr));
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <div className="container mrg">
       <h1>Edit Profile</h1>
-      <hr />
-      <div className="row">
-        {/* left column */}
-        <div className="col-md-3">
-          <div className="text-center">
-            <img
-              src="//placehold.it/100"
-              className="avatar img-circle"
-              alt="avatar"
-            />
-            <h6>Upload a different photo...</h6>
-            <input type="file" className="form-control" name="picture" />
+      <form onSubmit={handleSubmit}>
+        <hr />
+        <div className="row">
+          {/* left column */}
+          <div className="col-md-3">
+            <div className="text-center">
+              <img
+                src={
+                  imgd
+                    ? img
+                    : usr?.picture
+                    ? `http://localhost:8000/${usr?.picture}`
+                    : "//placehold.it/100"
+                }
+                className="avatar img-circle"
+                alt="avatar"
+                style={{ width: "200px", height: "200px" }}
+              />
+              <h6>Upload a different photo...</h6>
+              <input
+                type="file"
+                className="form-control"
+                name="picture"
+                onChange={handleImg}
+              />
+            </div>
           </div>
-        </div>
-        {/* edit form column */}
-        <div className="col-md-9 personal-info">
-          <h3>Personal info</h3>
-          <form className="form-horizontal" role="form">
+          {/* edit form column */}
+          <div className="col-md-9 personal-info">
+            <h3>Personal info</h3>
+
             <div className="form-group">
               <label className="col-lg-3 control-label">name:</label>
               <div className="col-lg-8">
                 <input
                   className="form-control"
                   type="text"
-                  defaultValue="test"
+                  name="name"
+                  defaultValue={usr?.name}
+                  value={data?.name}
+                  onChange={onChange}
                 />
               </div>
             </div>
             <div className="form-group">
-              <label className="col-md-3 control-label">Password:</label>
+              <label className="col-md-3 control-label">New Password:</label>
               <div className="col-md-8">
                 <input
                   className="form-control"
                   type="password"
-                  defaultValue={11111122333}
+                  placeholder="*****"
+                  name="password"
+                  onChange={onChange}
                 />
               </div>
             </div>
-            <div className="form-group">
-              <label className="col-md-3 control-label">
-                Confirm password:
-              </label>
-              <div className="col-md-8">
-                <input
-                  className="form-control"
-                  type="password"
-                  defaultValue={11111122333}
-                />
-              </div>
-            </div>
+
             <div className="form-group">
               <label className="col-md-3 control-label" />
               <div className="col-md-8">
-                <input
-                  type="button"
-                  className="btn btn-primary"
-                  defaultValue="Save Changes"
-                />
+                <button type="submit" className="btn btn-primary">
+                  Save changes
+                </button>
                 <span />
-                <input
-                  type="reset"
-                  className="btn btn-default"
-                  defaultValue="Cancel"
-                />
+                <button type="reset" className="btn btn-default">
+                  Reset
+                </button>
               </div>
             </div>
-          </form>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

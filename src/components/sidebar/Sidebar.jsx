@@ -5,11 +5,17 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import auth from "../../services/auth";
 import category from "../../services/category";
 //TODO: profile pic
+
 const Sidebar = () => {
-  const user = JSON.parse(localStorage.getItem("userc"));
+  let user;
+  if ("userc" in localStorage) {
+    user = JSON.parse(localStorage.getItem("userc"));
+  }
+
   console.log("userc : ", user);
   const location = useLocation();
   console.log(location.pathname);
+  console.log(user?.picture);
   const [data, setdata] = useState();
   const getCat = () => {
     category
@@ -122,7 +128,6 @@ const Sidebar = () => {
               <div className="navbar-nav mr-auto py-0">
                 <Link to="/">
                   <a
-                    href="#"
                     className={`nav-item nav-link ${
                       location.pathname === "/" ? "active" : ""
                     }`}
@@ -132,7 +137,6 @@ const Sidebar = () => {
                 </Link>
                 <Link to="/shop">
                   <a
-                    href="#"
                     className={`nav-item nav-link ${
                       location.pathname === "/shop" ? "active" : ""
                     }`}
@@ -144,26 +148,68 @@ const Sidebar = () => {
               {user == null ? (
                 <div className="navbar-nav ml-auto py-0">
                   <Link to="/login">
-                    <a href className="nav-item nav-link">
-                      Login
-                    </a>
+                    <a className="nav-item nav-link">Login</a>
                   </Link>
                   <Link to="/signup">
-                    <a href className="nav-item nav-link">
-                      Register
-                    </a>
+                    <a className="nav-item nav-link">Register</a>
                   </Link>
                 </div>
               ) : (
-                <div className="navbar-nav ml-auto py-0">
-                  <a
-                    href="#"
-                    className="nav-item nav-link"
-                    onClick={handlelogout}
-                  >
-                    Logout
-                  </a>
-                </div>
+                <>
+                  <div className="col-sm-9 col-4 text-right flex-header-menu justify-content-end">
+                    <div className="mr-0">
+                      <a
+                        className
+                        href="#"
+                        role="button"
+                        id="dropdownMenuLink"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <img
+                          src={
+                            user?.picture
+                              ? `http://localhost:8000/${user?.picture}`
+                              : "//placehold.it/100"
+                          }
+                          alt={user?.name}
+                          className="rounded-circle"
+                          width="40px"
+                          height="40px"
+                        />
+                      </a>
+                      <div
+                        className="dropdown-menu dropdown-menu-right mt-13"
+                        aria-labelledby="dropdownMenuLink"
+                      >
+                        <Link to="/profile">
+                          <a className="dropdown-item" href="#">
+                            <i className="fa fa-user pr-2" /> Profile
+                          </a>
+                        </Link>
+                        <div className="dropdown-divider" />
+                        <a className="dropdown-item" href="#">
+                          <i className="fa fa-th-list pr-2" /> Tasks
+                        </a>
+                        <div className="dropdown-divider" />
+                        <a className="dropdown-item" href="#">
+                          <i className="fa fa-book pr-2" /> Projects
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="navbar-nav ml-auto py-0">
+                    <a
+                      href="#"
+                      className="nav-item nav-link"
+                      onClick={handlelogout}
+                    >
+                      Logout
+                    </a>
+                  </div>
+                </>
               )}
             </div>
           </nav>

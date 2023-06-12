@@ -2,10 +2,14 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import auth from "../../services/auth";
+import { useDispatch } from "react-redux";
+import { success, error, loading } from "../../redux/userRedux";
+
 import "./style.css";
 
 //TODO: login
 function Login() {
+  const dispatch = useDispatch();
   const [errorMessages, setErrorMessages] = useState("");
   const [data, setData] = useState({});
   const navigate = useNavigate();
@@ -20,6 +24,7 @@ function Login() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    dispatch(loading());
     setErrorMessages("");
     auth
       .login(data)
@@ -40,6 +45,7 @@ function Login() {
             text: "please sign up",
           });
         } else if (res.data.data.picture == null) {
+          dispatch(success(res.data.data));
           localStorage.setItem("userc", JSON.stringify(res.data.data));
           localStorage.setItem("tokensc", JSON.stringify(res.data.token));
           localStorage.setItem(
@@ -48,6 +54,7 @@ function Login() {
           );
           navigate("/profile");
         } else {
+          dispatch(success(res.data.data));
           localStorage.setItem("userc", JSON.stringify(res.data.data));
           localStorage.setItem("tokensc", JSON.stringify(res.data.token));
           localStorage.setItem(
@@ -60,6 +67,7 @@ function Login() {
       .catch((error) => {
         setErrorMessages(error.response.data.message);
         console.log(error.response.data.message);
+        dispatch(error());
       });
   };
   return (

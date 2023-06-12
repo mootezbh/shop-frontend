@@ -22,7 +22,7 @@ const Topbar = () => {
     <div className="col-lg-3 col-6 text-right">
       <a href className="btn border">
         <i className="fas fa-heart text-primary" />
-        <span className="badge">0</span>
+        <span className="badge">1</span>
       </a>
       <a href className="btn border">
         <i className="fas fa-shopping-cart text-primary" />
