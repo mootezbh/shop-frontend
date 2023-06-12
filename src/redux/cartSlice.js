@@ -18,7 +18,7 @@ const cartSlice = createSlice({
         state.products[item_index].price =
           state.products[item_index].quantity * action.payload.price;
         for (let index = 0; index < state.products.length; index++) {
-            
+            state.products
             
         }
       }
