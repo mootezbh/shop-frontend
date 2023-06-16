@@ -197,7 +197,7 @@ const Layout = () => {
                     </Link>
                     <button
                       className="btn btn-sm text-dark p-0"
-                      onClick={dispatch(addToCart(item))}
+                      onClick={() => dispatch(addToCart(item))}
                     >
                       <i className="fas fa-shopping-cart text-primary mr-1" />
                       Add To Cart

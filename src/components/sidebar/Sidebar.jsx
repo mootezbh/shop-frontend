@@ -1,12 +1,14 @@
 /* eslint-disable react/jsx-key */
 import { useEffect } from "react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import auth from "../../services/auth";
 import category from "../../services/category";
 //TODO: profile pic
 
 const Sidebar = () => {
+
   let user;
   if ("userc" in localStorage) {
     user = JSON.parse(localStorage.getItem("userc"));
